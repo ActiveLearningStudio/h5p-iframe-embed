@@ -4,6 +4,7 @@ H5P.IFrameEmbed = function (options, contentId, contentData) {
   var $ = H5P.jQuery;
   var $iframe = null;
   this.$ = $(this);
+  var self = this;
 
   options = H5P.jQuery.extend({
     width: "500px",
@@ -18,6 +19,7 @@ H5P.IFrameEmbed = function (options, contentId, contentData) {
   }
 
   this.attach = function ($wrapper) {
+    this.wrapper = $wrapper;
     // Set up an iframe with the correct source, and append
     // it to '$wrapper'.
 
@@ -49,7 +51,7 @@ H5P.IFrameEmbed = function (options, contentId, contentData) {
         width: options.width,
         height: options.height,
         display: 'block'
-      }
+      },
     });
 
     $wrapper.html('');
@@ -95,6 +97,21 @@ H5P.IFrameEmbed = function (options, contentId, contentData) {
       height: elementWidth * elementSizeRatio + 'px'
     };
   };
+
+
+  // resize height of iframe to fit content
+  if (options.resizeSupported) {
+    var resizeIframe = setInterval(function () {
+      var $content = $iframe.contents();
+      if ($content && $content.find('html').length > 0 && $iframe.height() !== $iframe.contents().find('html').height()) {
+        $iframe.css({
+          height: $iframe.contents().find('html').height()
+        });
+      }
+    }, 500);
+    setTimeout(function( ) { clearInterval( resizeIframe ); }, 5 * 60 * 1000);
+  }
+
 
   // This is a fix/hack to make touch work in iframe on mobile safari,
   // like if the iframe is listening to touch events on the iframe's
