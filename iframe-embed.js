@@ -52,6 +52,7 @@ H5P.IFrameEmbed = function (options, contentId, contentData) {
         height: options.height,
         display: 'block'
       },
+      crossorigin: 'anonymous'
     });
 
     $wrapper.html('');
